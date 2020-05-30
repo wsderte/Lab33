@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class GenA {
     private int a, b, c, d, y;
-
+   public int m = 0;
     GenA(int a, int b, int c, int d, int y) {
         this.a = a;
         this.b = b;
@@ -36,19 +36,22 @@ public class GenA {
                 values[i] = getY(population.get(i));
                 int delta = values[i] - y;
                   if (delta == 0) {
-                     return  population.get(i).get(0) + " " + population.get(i).get(1) + " " + population.get(i).get(2) + " " + population.get(i).get(3);
+                     return  population.get(i).get(0) + " " + population.get(i).get(1) + " " + population.get(i).get(2) + " " + population.get(i).get(3) + " Кл-во мутаций " + m;
                   }
                 p = p + 1 / values[i];
             }
 
             getRange(range, values, p);
+
             getParent(parentsid,range);
-            getR( population, r, mutation, children, parentsid );
+
+            getR( population, r, mutation, children, parentsid);
+
             population = new ArrayList<>(4);
             getChild(population, children);
         }
         int i = getI(population);
-        return  population.get(i).get(0) + " " + population.get(i).get(1) + " " + population.get(i).get(2) + " " + population.get(i).get(3);
+        return  population.get(i).get(0)+ " " + population.get(i).get(1) + " " + population.get(i).get(2) + " " + population.get(i).get(3)+ " Кл-во мутаций " + m;
     }
 
 
@@ -116,18 +119,20 @@ public class GenA {
         return child;
     }
 
-    Integer[][] getMut(Random r,Double mutation,Integer[][] child, int i ) {
+    Integer[][] getMut(Random r,Double mutation,Integer[][] child, int i) {
         if (r.nextDouble() < mutation) {
             int choice = r.nextInt(child.length);
             child[i][choice] += (r.nextDouble() > 0.5 && child[i][choice] < y / 2) ? 1 : (child[i][choice] > 1) ? -1 : 0;
+            m++;
         }
         return child;
     }
-    Integer[][] getR(ArrayList<ArrayList<Integer>> a,Random r,Double mutation,Integer[][] child, Integer[] parentsid ) {
+    Integer[][] getR(ArrayList<ArrayList<Integer>> a,Random r,Double mutation,Integer[][] child, Integer[] parentsid) {
         for (int i = 0; i < a.size(); i++) {
             Integer p1 = parentsid[r.nextInt(parentsid.length - 1)];
             Integer p2 = parentsid[r.nextInt(parentsid.length - 1)];
             int threshold = r.nextInt(3) + 1;
+
             getC(a, p1, p2, child, threshold, i);
             getMut(r, mutation, child, i);
         }
